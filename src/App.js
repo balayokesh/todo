@@ -1,8 +1,8 @@
-import AddTask from './Components/AddTask';
+import AddTask from './AddTask';
 
 const App = () => {
     return (
-        <div className = "bg-light h-100">
+        <div className="bg-light h-100">
             <AddTask />
         </div>
     );
