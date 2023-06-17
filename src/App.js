@@ -11,17 +11,32 @@ const App = () => {
         let newTask = {
             id: count,
             task: document.getElementById("task").value,
-            idFinished: false
+            isFinished: false
         }
         setCount(count + 1);
         setTasks([...tasks, newTask]);
         document.getElementById("task").value = "";
+        document.getElementById("task").focus();
     }
 
     const deleteTask = taskIdToDelete => {
         let newTasks = tasks.filter(task => task.id !== taskIdToDelete);
         setTasks(newTasks);
     };
+
+    const markAsDone = taskIdToToggle => {
+        let otherTasks = tasks.filter(task => task.id !== taskIdToToggle);
+        let changedTask = tasks.filter(task => task.id === taskIdToToggle);
+        changedTask[0].isFinished = true;
+        setTasks([...otherTasks, changedTask[0]]);
+    }
+
+    const markAsIncomplete = taskIdToToggle => {
+        let otherTasks = tasks.filter(task => task.id !== taskIdToToggle);
+        let changedTask = tasks.filter(task => task.id === taskIdToToggle);
+        changedTask[0].isFinished = false;
+        setTasks([changedTask[0], ...otherTasks]);
+    }
 
     return (
         <main className="vh-100 p-2 p-md-5 text-white" style={{ background: "#000" }}>
@@ -40,7 +55,7 @@ const App = () => {
                     tasks.length > 0
                         ?
                         tasks.map(task => {
-                            return <Task task={task} key={task.id} deleteTask={deleteTask} />
+                            return <Task task={task} key={task.id} deleteTask={deleteTask} markAsDone={markAsDone} markAsIncomplete={markAsIncomplete} />
                         })
                         :
                         <p className='text-center'>No tasks have been added yet</p>
