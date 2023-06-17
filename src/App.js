@@ -39,7 +39,7 @@ const App = () => {
     }
 
     return (
-        <main className="p-2 p-md-5 text-white" style={{ background: "linear-gradient(#2C3E50, #000000)"}}>
+        <main className="p-2 p-md-5 text-white" style={{minHeight: '100vh'}}>
             <form className="input-group">
                 <input id="task" autoFocus autoComplete='false' className="form-control" placeholder="Write your task here" />
                 <input
@@ -50,7 +50,7 @@ const App = () => {
                 />
             </form>
 
-            <section className='mt-3 p-3' style={{}}>
+            <section className='mt-3 p-3'>
                 {
                     tasks.length > 0
                         ?
