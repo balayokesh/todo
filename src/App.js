@@ -3,17 +3,28 @@ import Task from './Task';
 
 const App = () => {
 
+    const [count, setCount] = useState(0);
     const [tasks, setTasks] = useState([]);
 
     const addTask = (event) => {
         event.preventDefault();
-        let newTask = document.getElementById("task").value;
+        let newTask = {
+            id: count,
+            task: document.getElementById("task").value,
+            idFinished: false
+        }
+        setCount(count + 1);
         setTasks([...tasks, newTask]);
         document.getElementById("task").value = "";
     }
 
+    const deleteTask = taskIdToDelete => {
+        let newTasks = tasks.filter(task => task.id !== taskIdToDelete);
+        setTasks(newTasks);
+    };
+
     return (
-        <main className="vh-100 p-2 p-md-5 text-white" style={{background: "#000"}}>
+        <main className="vh-100 p-2 p-md-5 text-white" style={{ background: "#000" }}>
             <form className="input-group">
                 <input id="task" autoFocus autoComplete='false' className="form-control" placeholder="Write your task here" />
                 <input
@@ -24,12 +35,12 @@ const App = () => {
                 />
             </form>
 
-            <section className='mt-3 p-3' style={{maxHeight: "75vh", overflowY: "scroll"}}>
+            <section className='mt-3 p-3' style={{ maxHeight: "75vh", overflowY: "scroll" }}>
                 {
                     tasks.length > 0
                         ?
                         tasks.map(task => {
-                            return <Task task={task} />
+                            return <Task task={task} key={task.id} deleteTask={deleteTask} />
                         })
                         :
                         <p className='text-center'>No tasks have been added yet</p>
