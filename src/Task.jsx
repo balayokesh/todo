@@ -5,7 +5,7 @@ const Task = (props) => {
     }
 
     return (
-        <div className="d-flex align-items-center justify-content-between rounded bg-light text-dark p-2 mb-2">
+        <div className="d-flex align-items-center justify-content-between rounded p-2 mb-2 bg-dark border-bottom">
             {
                 props.task.isFinished
                     ?

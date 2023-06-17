@@ -39,18 +39,18 @@ const App = () => {
     }
 
     return (
-        <main className="vh-100 p-2 p-md-5 text-white" style={{ background: "#000" }}>
+        <main className="p-2 p-md-5 text-white" style={{ background: "linear-gradient(#2C3E50, #000000)"}}>
             <form className="input-group">
                 <input id="task" autoFocus autoComplete='false' className="form-control" placeholder="Write your task here" />
                 <input
                     type='submit'
                     onClick={addTask}
-                    className="input-group-append btn btn-primary"
+                    className="input-group-append btn btn-secondary"
                     value="Add Task"
                 />
             </form>
 
-            <section className='mt-3 p-3' style={{ maxHeight: "75vh", overflowY: "scroll" }}>
+            <section className='mt-3 p-3' style={{}}>
                 {
                     tasks.length > 0
                         ?
