@@ -38,8 +38,17 @@ const App = () => {
         setTasks([changedTask[0], ...otherTasks]);
     }
 
+    const saveTaskChanges = (taskIdToUpdate, task) => {
+        let taskCpy = tasks;
+        taskCpy.forEach(elem => {
+            if (elem.id === taskIdToUpdate)
+                elem.task = task;
+        });
+        setTasks(taskCpy);
+    }
+
     return (
-        <main className="p-2 p-md-5 text-white" style={{minHeight: '100vh'}}>
+        <main className="p-2 p-md-5 text-white" style={{ minHeight: '100vh' }}>
             <form className="input-group">
                 <input id="task" autoFocus autoComplete='false' className="form-control" placeholder="Write your task here" />
                 <input
@@ -55,7 +64,14 @@ const App = () => {
                     tasks.length > 0
                         ?
                         tasks.map(task => {
-                            return <Task task={task} key={task.id} deleteTask={deleteTask} markAsDone={markAsDone} markAsIncomplete={markAsIncomplete} />
+                            return <Task
+                                task={task}
+                                key={task.id}
+                                deleteTask={deleteTask}
+                                markAsDone={markAsDone}
+                                markAsIncomplete={markAsIncomplete}
+                                saveTaskChanges={saveTaskChanges}
+                            />
                         })
                         :
                         <p className='text-center'>No tasks have been added yet</p>
