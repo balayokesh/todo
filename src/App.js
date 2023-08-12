@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Task from './Task';
+import TopBar from './TopBar';
 
 const App = () => {
 
@@ -48,6 +49,10 @@ const App = () => {
     }
 
     return (
+        <>
+        <header className='me-3 text-white'>
+            <TopBar />
+        </header>
         <main className="p-2 p-md-5 text-white" style={{ minHeight: '100vh' }}>
             <form className="input-group">
                 <input id="task" autoFocus autoComplete='false' className="form-control" placeholder="Write your task here" />
@@ -78,6 +83,7 @@ const App = () => {
                 }
             </section>
         </main>
+        </>
     );
 }
 

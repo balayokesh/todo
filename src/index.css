@@ -4,3 +4,12 @@
 body {
     background: linear-gradient(#2C3E50, #000000);
 }
+header {
+    background: linear-gradient(black, rgb(2, 11, 29));
+    padding: 5px;
+}
+#logout:hover {
+    border: 2px solid red;
+    opacity: 0.3;
+    cursor: pointer;
+}
