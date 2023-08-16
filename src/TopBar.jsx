@@ -28,6 +28,8 @@ export default function TopBar() {
                     const token = credential.accessToken;
                     const user = result.user;
                     setUser(user);
+                    sessionStorage.setItem('userEmail', user.email);
+                    console.log(user.email);
                     console.log(user);
                 }).catch((error) => {
                     const errorCode = error.code;
@@ -44,6 +46,7 @@ export default function TopBar() {
         signOut(auth).then(() => {
             console.log("Signed out successfully")
             setUser(null);
+            sessionStorage.removeItem('userEmail');
         }).catch((error) => {
             // An error happened.
         });
@@ -53,7 +56,7 @@ export default function TopBar() {
         return (
             <div className='d-flex justify-content-between align-items-center'>
                 <h3 className='align-middle m-2'>Welcome, {user.displayName}</h3>
-                <img src={user.photoURL} alt='Profile photo' className='rounded-circle' onClick={handleLogout} height={'50px'} title='Log Out' id='logout' />
+                <img src={user.photoURL} alt='Profile' className='rounded-circle' onClick={handleLogout} height={'50px'} title='Log Out' id='logout' />
             </div>
         )
     }
