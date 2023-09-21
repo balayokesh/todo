@@ -4,13 +4,12 @@ import TopBar from './TopBar';
 
 import app from './firebase';
 
-import { collection, getDocs, getFirestore, addDoc, query, where, deleteDoc, doc } from "firebase/firestore";
+import { collection, getDocs, getFirestore, addDoc, query, where, deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 const App = () => {
 
     const db = getFirestore(app);
 
-    const [count, setCount] = useState(0);
     const [tasks, setTasks] = useState([]);
 
     const initializeDb = async () => {
@@ -82,10 +81,22 @@ const App = () => {
     };
 
     const markAsDone = taskIdToToggle => {
+        // Update on client
         let otherTasks = tasks.filter(task => task.id !== taskIdToToggle);
         let changedTask = tasks.filter(task => task.id === taskIdToToggle);
         changedTask[0].isFinished = true;
         setTasks([...otherTasks, changedTask[0]]);
+
+        // Update on firestore
+        let newData = changedTask[0];
+        const documentRef = doc(db, 'tasks', taskIdToToggle);
+        updateDoc(documentRef, newData)
+            .then(() => {
+                console.log(`Document with ID ${taskIdToToggle} successfully updated.`);
+            })
+            .catch((error) => {
+                console.error('Error updating document:', error);
+            });
     }
 
     const markAsIncomplete = taskIdToToggle => {
