@@ -49,7 +49,7 @@ const App = () => {
 
                 // Make changes in client
                 let newTask = {
-                    id: docRef,
+                    id: docRef.id,
                     task: document.getElementById("task").value,
                     isFinished: false,
                     email: sessionStorage.getItem('userEmail')
@@ -66,8 +66,19 @@ const App = () => {
     }
 
     const deleteTask = async (taskIdToDelete) => {
+        // Make changes on client
         let newTasks = tasks.filter(task => task.id !== taskIdToDelete);
         setTasks(newTasks);
+
+        // Make changes on firestore
+        const documentRef = doc(db, 'tasks', taskIdToDelete);
+        deleteDoc(documentRef)
+            .then(() => {
+                console.log(`Document with ID ${taskIdToDelete} successfully deleted.`);
+            })
+            .catch((error) => {
+                console.error('Error deleting document:', error);
+            });
     };
 
     const markAsDone = taskIdToToggle => {
