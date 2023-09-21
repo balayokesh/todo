@@ -4,7 +4,7 @@ import TopBar from './TopBar';
 
 import app from './firebase';
 
-import { collection, getDocs, getFirestore, addDoc, query, where } from "firebase/firestore";
+import { collection, getDocs, getFirestore, addDoc, query, where, deleteDoc, doc } from "firebase/firestore";
 
 const App = () => {
 
@@ -20,50 +20,52 @@ const App = () => {
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             let newTask = {
-                id: doc.data().id,
+                id: doc.id,
                 task: doc.data().task,
                 isFinished: doc.data().isFinished
             }
             taskArr = [...taskArr, newTask];
         });
         setTasks(taskArr);
+        console.log(taskArr);
     }
 
     useEffect(() => {
         initializeDb();
     }, [])
 
-    const addTask = async(event) => {
+    const addTask = async (event) => {
         event.preventDefault();
-        let newTask = {
-            id: count,
-            task: document.getElementById("task").value,
-            isFinished: false
-        }
-        setCount(count + 1);
-        setTasks([...tasks, newTask]);
-        document.getElementById("task").value = "";
-        document.getElementById("task").focus();
 
-        // Add to firestore
         if (sessionStorage.getItem('userEmail')) {
             try {
+                // Make changes in firestore
                 const docRef = await addDoc(collection(db, "tasks"), {
-                    id: newTask.id,
-                    task: newTask.task,
+                    task: document.getElementById("task").value,
                     isFinished: false,
                     email: sessionStorage.getItem('userEmail')
                 });
                 console.log("Document written with ID: ", docRef.id);
+
+                // Make changes in client
+                let newTask = {
+                    id: docRef,
+                    task: document.getElementById("task").value,
+                    isFinished: false,
+                    email: sessionStorage.getItem('userEmail')
+                }
+                setTasks([...tasks, newTask]);
+                document.getElementById("task").value = "";
+                document.getElementById("task").focus();
             } catch (e) {
                 console.error("Error adding document: ", e);
             }
         }
-        else 
+        else
             console.log("not logged in");
     }
 
-    const deleteTask = taskIdToDelete => {
+    const deleteTask = async (taskIdToDelete) => {
         let newTasks = tasks.filter(task => task.id !== taskIdToDelete);
         setTasks(newTasks);
     };
