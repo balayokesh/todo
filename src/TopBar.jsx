@@ -5,7 +5,7 @@ import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signO
 
 const provider = new GoogleAuthProvider();
 
-export default function TopBar() {
+export default function TopBar({onStateChange}) {
 
     const [user, setUser] = useState();
     const auth = getAuth(app);
@@ -18,7 +18,10 @@ export default function TopBar() {
                 console.log("user is logged out")
             }
         });
-    }, [])
+
+        // Notify the parent component about the state change
+        onStateChange(user);
+    }, [user])
 
     const loginWithPopUp = () => {
         if (!auth.currentUser) {

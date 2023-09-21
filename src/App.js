@@ -33,6 +33,15 @@ const App = () => {
         initializeDb();
     }, [])
 
+    const handleLoginChange = (loginState) => {
+        if (!loginState) {
+            setTasks([]);  // Empty tasks state
+        }
+        else {
+            initializeDb(); // Load tasks from firestore
+        }
+    };
+
     const addTask = async (event) => {
         event.preventDefault();
 
@@ -61,7 +70,7 @@ const App = () => {
             }
         }
         else
-            console.log("not logged in");
+            alert("Please log in to add");
     }
 
     const deleteTask = async (taskIdToDelete) => {
@@ -118,6 +127,7 @@ const App = () => {
     }
 
     const saveTaskChanges = (taskIdToUpdate, task) => {
+        // Update on client
         let taskCpy = tasks;
         let newData = {};
         taskCpy.forEach(elem => {
@@ -143,7 +153,7 @@ const App = () => {
     return (
         <>
             <header className='me-3 text-white'>
-                <TopBar />
+                <TopBar onStateChange={handleLoginChange} />
             </header>
             <main className="p-2 p-md-5 text-white" style={{ minHeight: '100vh' }}>
                 <form className="input-group">
@@ -171,7 +181,7 @@ const App = () => {
                                 />
                             })
                             :
-                            <p className='text-center'>No tasks have been added yet</p>
+                            <p className='text-center' id='taskContainer'>No tasks have been added yet</p>
                     }
                 </section>
             </main>
