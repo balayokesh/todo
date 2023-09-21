@@ -119,11 +119,25 @@ const App = () => {
 
     const saveTaskChanges = (taskIdToUpdate, task) => {
         let taskCpy = tasks;
+        let newData = {};
         taskCpy.forEach(elem => {
-            if (elem.id === taskIdToUpdate)
+            if (elem.id === taskIdToUpdate) {
                 elem.task = task;
+                newData = elem;
+                return;
+            }
         });
         setTasks(taskCpy);
+
+        // Update on firestore
+        const documentRef = doc(db, 'tasks', taskIdToUpdate);
+        updateDoc(documentRef, newData)
+            .then(() => {
+                console.log(`Document with ID ${taskIdToUpdate} successfully updated.`);
+            })
+            .catch((error) => {
+                console.error('Error updating document:', error);
+            });
     }
 
     return (
