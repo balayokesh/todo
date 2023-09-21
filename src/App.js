@@ -104,6 +104,17 @@ const App = () => {
         let changedTask = tasks.filter(task => task.id === taskIdToToggle);
         changedTask[0].isFinished = false;
         setTasks([changedTask[0], ...otherTasks]);
+
+        // Update on firestore
+        let newData = changedTask[0];
+        const documentRef = doc(db, 'tasks', taskIdToToggle);
+        updateDoc(documentRef, newData)
+            .then(() => {
+                console.log(`Document with ID ${taskIdToToggle} successfully updated.`);
+            })
+            .catch((error) => {
+                console.error('Error updating document:', error);
+            });
     }
 
     const saveTaskChanges = (taskIdToUpdate, task) => {
