@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 import Task from './Task';
 import TopBar from './TopBar';
 
@@ -95,6 +96,12 @@ const App = () => {
         let changedTask = tasks.filter(task => task.id === taskIdToToggle);
         changedTask[0].isFinished = true;
         setTasks([...otherTasks, changedTask[0]]);
+
+        confetti({
+            particleCount: 100,
+            spread: 70,
+            origin: { y: 0.6 }
+        });
 
         // Update on firestore
         let newData = changedTask[0];
