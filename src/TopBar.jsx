@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 
 import app from './firebase';
 import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "firebase/auth";
@@ -10,37 +10,29 @@ export default function TopBar({onStateChange}) {
     const [user, setUser] = useState();
     const auth = getAuth(app);
 
-    useEffect(() => {
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                setUser(user);
-            } else {
-                console.log("user is logged out")
-            }
-        });
+    const onStateChangeRef = useRef(onStateChange);
 
-        // Notify the parent component about the state change
-        onStateChange(user);
-    }, [user])
+    useEffect(() => {
+        onStateChangeRef.current = onStateChange;
+    }, [onStateChange]);
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setUser(user);
+            onStateChangeRef.current(user);
+        });
+        return () => unsubscribe();
+    }, [auth]);
 
     const loginWithPopUp = () => {
         if (!auth.currentUser) {
             signInWithPopup(auth, provider)
                 .then((result) => {
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
                     const user = result.user;
                     setUser(user);
                     sessionStorage.setItem('userEmail', user.email);
-                    console.log(user.email);
-                    console.log(user);
                 }).catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    // The email of the user's account used.
-                    const email = error.customData.email;
-                    // The AuthCredential type that was used.
-                    const credential = GoogleAuthProvider.credentialFromError(error);
+                    console.error("Error during sign-in:", error);
                 });
         }
     }
@@ -51,7 +43,7 @@ export default function TopBar({onStateChange}) {
             setUser(null);
             sessionStorage.removeItem('userEmail');
         }).catch((error) => {
-            // An error happened.
+            console.error(error);
         });
     }
 

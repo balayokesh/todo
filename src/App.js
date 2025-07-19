@@ -13,10 +13,12 @@ const App = () => {
 
     const [tasks, setTasks] = useState([]);
 
-    const initializeDb = async () => {
+    const userEmail = sessionStorage.getItem('userEmail');
+
+    const initializeDb = React.useCallback(async () => {
         let taskArr = [];
         const tasksRef = collection(db, "tasks");
-        const q = query(tasksRef, where("email", "==", sessionStorage.getItem('userEmail')));
+        const q = query(tasksRef, where("email", "==", userEmail));
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach((doc) => {
             let newTask = {
@@ -28,11 +30,11 @@ const App = () => {
         });
         setTasks(taskArr);
         console.log(taskArr);
-    }
+    }, [db, userEmail]);
 
     useEffect(() => {
         initializeDb();
-    }, [])
+    }, [userEmail, initializeDb]);
 
     const handleLoginChange = (loginState) => {
         if (!loginState) {
